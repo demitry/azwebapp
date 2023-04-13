@@ -1,6 +1,7 @@
 ﻿using Microsoft.FeatureManagement;
 using sqlapp.Models;
 using System.Data.SqlClient;
+using System.Text.Json;
 
 namespace sqlapp.Services
 {
@@ -26,6 +27,7 @@ namespace sqlapp.Services
             return new SqlConnection(_configuration["SQLConnection"]);
         }
 
+        /*
         public List<Product> GetProducts()
         {
             List<Product> products = new List<Product>();
@@ -53,6 +55,21 @@ namespace sqlapp.Services
                 }
                 connection.Close();
                 return products;
+            }
+        }
+        */
+
+        public async Task<List<Product>> GetProducts()
+        {
+            string functionUrl = "https://functionapp1100.azurewebsites.net/api/GetProducts?code=JF8zoZOxbN4m6QbaIudlJQpYBnqW7rkRFget-PHBlhW6AzFuUaOYdA==";
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                HttpResponseMessage responseMessage = await httpClient.GetAsync(functionUrl);
+
+                string content = await responseMessage.Content.ReadAsStringAsync();
+
+                return JsonSerializer.Deserialize<List<Product>>(content);
             }
         }
     }
