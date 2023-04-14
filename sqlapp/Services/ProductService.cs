@@ -69,7 +69,7 @@ namespace sqlapp.Services
 
                 string content = await responseMessage.Content.ReadAsStringAsync();
 
-                return JsonSerializer.Deserialize<List<Product>>(content);
+                return JsonSerializer.Deserialize<List<Product>>(content) ?? new List<Product>();
             }
         }
     }
